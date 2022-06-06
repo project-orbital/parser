@@ -10,7 +10,8 @@ Integration with the frontend is not guaranteed to work.
 ## Developer Setup
 
 ### System requirements
-1. [Rust](https://www.rust-lang.org/) 1.61.0 or higher
+1. [Rust](https://www.rust-lang.org/tools/install) 1.61.0 or higher
+2. [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/) 0.10.2 or higher
 
 ### Setting up your local environment
 1. Clone the repository to your local machine.
