@@ -13,6 +13,9 @@ default = ["console_error_panic_hook"]
 wasm-bindgen = { version = "0.2.63", features = ["serde-serialize"] }
 serde = { version = "1.0", features = ["derive"] }
 itertools = "0.10.3"
+fancy-regex = "0.10.0"
+lazy_static = "1.4.0"
+rusty-money = "0.4.1"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
