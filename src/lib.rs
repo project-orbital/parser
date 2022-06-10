@@ -1,6 +1,6 @@
-mod utils;
-
 use wasm_bindgen::prelude::*;
+
+mod utils;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -14,6 +14,7 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn parse(text: String) -> String {
-    text
+pub fn parse(array: JsValue) -> String {
+    let elements: Vec<String> = array.into_serde().unwrap();
+    elements.join("\n\n")
 }
