@@ -14,11 +14,11 @@ lazy_static! {
     .unwrap();
 }
 
-pub struct Document<'a> {
-    pages: Vec<Page<'a>>,
+pub struct Document {
+    pages: Vec<Page>,
 }
 
-impl FromStr for Document<'_> {
+impl FromStr for Document {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -32,7 +32,7 @@ impl FromStr for Document<'_> {
     }
 }
 
-impl Display for Document<'_> {
+impl Display for Document {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.pages.iter().map(Page::to_string).join("\n\n"))
     }

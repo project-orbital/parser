@@ -1,21 +1,24 @@
 use std::fmt::{Display, Formatter};
+use std::str::FromStr;
 
 use fancy_regex::{Match, Regex};
 use lazy_static::lazy_static;
-use rusty_money::{iso, Money};
+use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
 
 lazy_static! {
     static ref RE: Regex = Regex::new(r"\s+",).unwrap();
 }
 
-pub struct Transaction<'a> {
+#[derive(Serialize, Deserialize)]
+pub struct Transaction {
     date: String,
     description: String,
-    amount: Money<'a, iso::Currency>,
-    balance: Option<Money<'a, iso::Currency>>,
+    amount: Decimal,
+    balance: Option<Decimal>,
 }
 
-impl Transaction<'_> {
+impl Transaction {
     pub(crate) fn from_strs(
         date: &str,
         desc1: &str,
@@ -27,13 +30,13 @@ impl Transaction<'_> {
         Self {
             date: date.to_string(),
             description: RE.replace_all(&desc, " ").trim().to_string(),
-            amount: Money::from_str(amt, iso::SGD).unwrap(),
-            balance: bal.map(|m| Money::from_str(m.as_str(), iso::SGD).unwrap()),
+            amount: Decimal::from_str(amt).unwrap(),
+            balance: bal.map(|m| Decimal::from_str(m.as_str()).unwrap()),
         }
     }
 }
 
-impl Display for Transaction<'_> {
+impl Display for Transaction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

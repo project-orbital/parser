@@ -1,9 +1,10 @@
 use std::fmt::{Display, Formatter};
+use std::str::FromStr;
 
 use fancy_regex::Regex;
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use rusty_money::{iso, Money};
+use rust_decimal::Decimal;
 
 use crate::dbs::transactions::Transaction;
 
@@ -13,17 +14,17 @@ lazy_static! {
             .unwrap();
 }
 
-pub struct Page<'a> {
-    balanced_brought_forward: Money<'a, iso::Currency>,
-    balanced_carried_forward: Money<'a, iso::Currency>,
-    transactions: Vec<Transaction<'a>>,
+pub struct Page {
+    balanced_brought_forward: Decimal,
+    balanced_carried_forward: Decimal,
+    transactions: Vec<Transaction>,
 }
 
-impl Page<'_> {
+impl Page {
     pub(crate) fn from_strs(bbf: &str, bcf: &str, body: &str) -> Self {
         Self {
-            balanced_brought_forward: Money::from_str(bbf, iso::SGD).unwrap(),
-            balanced_carried_forward: Money::from_str(bcf, iso::SGD).unwrap(),
+            balanced_brought_forward: Decimal::from_str(bbf).unwrap(),
+            balanced_carried_forward: Decimal::from_str(bcf).unwrap(),
             transactions: RE
                 .captures_iter(body)
                 .filter_map(Result::ok)
@@ -33,7 +34,7 @@ impl Page<'_> {
     }
 }
 
-impl Display for Page<'_> {
+impl Display for Page {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
