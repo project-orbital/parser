@@ -3,7 +3,7 @@ use parser::dbs::parser::parse;
 
 fn dbs() {
     let s = include_str!("../src/dbs/tmp.txt");
-    parse(s);
+    parse(vec![s.to_string()]);
 }
 
 fn criterion_benchmark(c: &mut Criterion) {

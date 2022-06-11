@@ -1,5 +1,6 @@
-use itertools::Itertools;
 use wasm_bindgen::prelude::*;
+
+use crate::dbs::parser;
 
 pub mod dbs;
 mod utils;
@@ -17,11 +18,8 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn parse(array: JsValue) -> String {
-    let elements: Vec<String> = array.into_serde().unwrap();
-    #[allow(unstable_name_collisions)]
-    elements
-        .into_iter()
-        .map(|s| dbs::parser::parse(s.as_str()))
-        .intersperse("\n\n".to_string())
-        .collect()
+    array
+        .into_serde()
+        .map(parser::parse)
+        .unwrap_or_else(|_| "{}".to_string())
 }
