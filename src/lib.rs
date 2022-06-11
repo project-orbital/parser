@@ -1,9 +1,7 @@
 use itertools::Itertools;
 use wasm_bindgen::prelude::*;
 
-use implementations::dbs;
-
-mod implementations;
+mod dbs;
 mod utils;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -23,7 +21,7 @@ pub fn parse(array: JsValue) -> String {
     #[allow(unstable_name_collisions)]
     elements
         .into_iter()
-        .map(|s| dbs::parse(s.as_str()))
+        .map(|s| dbs::parser::parse(s.as_str()))
         .intersperse("\n\n".to_string())
         .collect()
 }
