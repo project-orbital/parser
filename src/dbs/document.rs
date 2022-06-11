@@ -2,8 +2,8 @@ use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 use fancy_regex::Regex;
-use itertools::Itertools;
 use lazy_static::lazy_static;
+use serde::{Deserialize, Serialize};
 
 use crate::dbs::page::Page;
 
@@ -14,6 +14,7 @@ lazy_static! {
     .unwrap();
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct Document {
     pages: Vec<Page>,
 }
@@ -34,6 +35,10 @@ impl FromStr for Document {
 
 impl Display for Document {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.pages.iter().map(Page::to_string).join("\n\n"))
+        write!(
+            f,
+            "{}",
+            serde_json::to_string_pretty(self).unwrap_or_else(|_| "".to_string())
+        )
     }
 }

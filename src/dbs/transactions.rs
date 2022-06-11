@@ -40,14 +40,8 @@ impl Display for Transaction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "date: {}\ndescription: {}\namount: {}\nbalance: {}",
-            self.date,
-            self.description,
-            self.amount,
-            self.balance
-                .as_ref()
-                .map(|bal| bal.to_string())
-                .unwrap_or_else(|| "?".to_string())
+            "{}",
+            serde_json::to_string_pretty(self).unwrap_or_else(|_| "".to_string())
         )
     }
 }

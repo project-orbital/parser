@@ -2,9 +2,9 @@ use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 use fancy_regex::Regex;
-use itertools::Itertools;
 use lazy_static::lazy_static;
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
 
 use crate::dbs::transactions::Transaction;
 
@@ -14,6 +14,7 @@ lazy_static! {
             .unwrap();
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct Page {
     balanced_brought_forward: Decimal,
     balanced_carried_forward: Decimal,
@@ -38,13 +39,8 @@ impl Display for Page {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "bbf: {}\n\n{}\n\nbcf: {}",
-            self.balanced_brought_forward,
-            self.transactions
-                .iter()
-                .map(Transaction::to_string)
-                .join("\n\n"),
-            self.balanced_carried_forward
+            "{}",
+            serde_json::to_string_pretty(self).unwrap_or_else(|_| "".to_string())
         )
     }
 }
