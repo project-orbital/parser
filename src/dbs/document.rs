@@ -25,7 +25,7 @@ impl FromStr for Document<'_> {
         Ok(Self {
             pages: RE
                 .captures_iter(s)
-                .map(Result::unwrap)
+                .filter_map(Result::ok)
                 .map(|cap| Page::from_strs(&cap[1], &cap[3], &cap[2]))
                 .collect(),
         })

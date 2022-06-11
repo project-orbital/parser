@@ -26,7 +26,7 @@ impl Page<'_> {
             balanced_carried_forward: Money::from_str(bcf, iso::SGD).unwrap(),
             transactions: RE
                 .captures_iter(body)
-                .map(Result::unwrap)
+                .filter_map(Result::ok)
                 .map(|cap| Transaction::from_strs(&cap[1], &cap[2], &cap[5], &cap[3], cap.get(4)))
                 .collect(),
         }
