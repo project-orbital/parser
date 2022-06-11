@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use wasm_bindgen::prelude::*;
 
-mod dbs;
+pub mod dbs;
 mod utils;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global

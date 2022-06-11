@@ -1,4 +1,4 @@
 mod document;
 mod page;
-pub(crate) mod parser;
+pub mod parser;
 mod transactions;
