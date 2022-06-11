@@ -1,3 +1,7 @@
+# Prevent accidental upload of sensitive documents
+*.pdf
+*.txt
+
 .idea/
 resources/
 
