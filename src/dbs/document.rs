@@ -6,6 +6,7 @@ use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
 use crate::dbs::page::Page;
+use crate::dbs::transactions::Transaction;
 
 lazy_static! {
     static ref RE: Regex = Regex::new(
@@ -30,6 +31,15 @@ impl FromStr for Document {
                 .map(|cap| Page::from_strs(&cap[1], &cap[3], &cap[2]))
                 .collect(),
         })
+    }
+}
+
+impl Document {
+    pub fn transactions(&self) -> Vec<&Transaction> {
+        self.pages
+            .iter()
+            .flat_map(|page| page.transactions().into_iter())
+            .collect()
     }
 }
 

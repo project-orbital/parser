@@ -33,6 +33,10 @@ impl Page {
                 .collect(),
         }
     }
+
+    pub(crate) fn transactions(&self) -> Vec<&Transaction> {
+        self.transactions.iter().collect()
+    }
 }
 
 impl Display for Page {
