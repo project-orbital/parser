@@ -8,32 +8,31 @@ use lazy_static::lazy_static;
 use crate::dbs::page::Page;
 
 lazy_static! {
-    static ref FILTERING_REGEX: Regex = Regex::new(
+    static ref RE: Regex = Regex::new(
         r"(?s)Balance Brought Forward\s(\d+\.\d{2})(.*?)Balance Carried Forward\s(\d+\.\d{2})",
     )
     .unwrap();
 }
 
-pub struct Document {
-    pages: Vec<Page>,
+pub struct Document<'a> {
+    pages: Vec<Page<'a>>,
 }
 
-impl FromStr for Document {
+impl FromStr for Document<'_> {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Self {
-            pages: FILTERING_REGEX
+            pages: RE
                 .captures_iter(s)
-                .map(|m| m.unwrap().get(0).unwrap().as_str())
-                .map(Page::from_str)
                 .map(Result::unwrap)
+                .map(|cap| Page::from_strs(&cap[1], &cap[3], &cap[2]))
                 .collect(),
         })
     }
 }
 
-impl Display for Document {
+impl Display for Document<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.pages.iter().map(Page::to_string).join("\n\n"))
     }

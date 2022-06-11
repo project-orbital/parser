@@ -1,39 +1,39 @@
 use std::fmt::{Display, Formatter};
-use std::str::FromStr;
 
 use fancy_regex::Regex;
 use itertools::Itertools;
 use lazy_static::lazy_static;
+use rusty_money::{iso, Money};
 
 use crate::dbs::transactions::Transaction;
 
 lazy_static! {
-    static ref FILTERING_REGEX: Regex = Regex::new(
-        r"(?s)Balance Brought Forward\s(\d+\.\d{2})(.*?)Balance Carried Forward\s(\d+\.\d{2})",
-    )
-    .unwrap();
+    static ref RE: Regex =
+        Regex::new(r"(?s)(\d{2} \w{3})(.*?)(\d+\.\d{2})(\d+\.\d{2})?(.*?)(?=$|\d{2} \w{3})")
+            .unwrap();
 }
 
-pub struct Page {
-    balanced_brought_forward: String,
-    balanced_carried_forward: String,
-    transactions: Vec<Transaction>,
+pub struct Page<'a> {
+    balanced_brought_forward: Money<'a, iso::Currency>,
+    balanced_carried_forward: Money<'a, iso::Currency>,
+    transactions: Vec<Transaction<'a>>,
 }
 
-impl FromStr for Page {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let captures = FILTERING_REGEX.captures(s).unwrap().unwrap();
-        Ok(Self {
-            balanced_brought_forward: captures.get(1).unwrap().as_str().to_string(),
-            balanced_carried_forward: captures.get(3).unwrap().as_str().to_string(),
-            transactions: Transaction::parse_all(captures.get(2).unwrap().as_str()),
-        })
+impl Page<'_> {
+    pub(crate) fn from_strs(bbf: &str, bcf: &str, body: &str) -> Self {
+        Self {
+            balanced_brought_forward: Money::from_str(bbf, iso::SGD).unwrap(),
+            balanced_carried_forward: Money::from_str(bcf, iso::SGD).unwrap(),
+            transactions: RE
+                .captures_iter(body)
+                .map(Result::unwrap)
+                .map(|cap| Transaction::from_strs(&cap[1], &cap[2], &cap[5], &cap[3], cap.get(4)))
+                .collect(),
+        }
     }
 }
 
-impl Display for Page {
+impl Display for Page<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
