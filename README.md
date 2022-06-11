@@ -1,11 +1,11 @@
-# Frontend
-This repository contains the frontend of our application, DollarPlanner.
+# Parser
+This repository contains the document parser of DollarPlanner. The parser is integrated with the backend as a submodule without a standalone executable.
 
 `master` is the stable branch, and should be able to be integrated with the corresponding `master`
-branch of the frontend.
+branch of the backend.
 
 `dev` is the main development branch, which may be unstable and buggy.
-Integration with the frontend is not guaranteed to work.
+Integration with the backend is not guaranteed to work.
 
 ## Developer Setup
 
@@ -28,4 +28,8 @@ Integration with the frontend is not guaranteed to work.
     cargo build
     ```
 
-3. Nothing else can be done at the moment.
+3. Run the unit tests.
+
+    ```
+    cargo test
+    ```
