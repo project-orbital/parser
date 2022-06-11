@@ -15,7 +15,7 @@ lazy_static! {
     .unwrap();
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Document {
     pages: Vec<Page>,
 }

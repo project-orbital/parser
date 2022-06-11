@@ -10,7 +10,7 @@ lazy_static! {
     static ref RE: Regex = Regex::new(r"\s+",).unwrap();
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Transaction {
     date: String,
     description: String,
