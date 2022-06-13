@@ -3,11 +3,12 @@ use std::str::FromStr;
 use itertools::Itertools;
 
 use crate::dbs::document::Document;
+use crate::utils;
 
 pub fn parse(texts: Vec<String>) -> String {
     let documents = texts
         .into_iter()
-        .map(|text| Document::from_str(&text))
+        .map(|text| Document::from_str(utils::redact_card_numbers(&text).as_str()))
         .filter_map(Result::ok)
         .collect_vec();
     let transactions = documents
