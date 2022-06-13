@@ -2,7 +2,7 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use parser::dbs::parser::parse;
 
 fn dbs() {
-    let s = include_str!("../src/dbs/tmp.txt");
+    let s = include_str!("dbs/test1.txt");
     parse(vec![s.to_string()]);
 }
 

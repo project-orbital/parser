@@ -1,5 +1,6 @@
-use itertools::Itertools;
 use std::str::FromStr;
+
+use itertools::Itertools;
 
 use crate::dbs::document::Document;
 
@@ -16,10 +17,37 @@ pub fn parse(texts: Vec<String>) -> String {
     serde_json::to_string_pretty(&transactions).unwrap_or_else(|_| "".to_string())
 }
 
-#[test]
-fn test() {
-    let s = include_str!("tmp.txt");
-    let p = parse(vec![s.to_string()]);
-    println!("{p}");
-    assert!(!p.is_empty())
+#[cfg(test)]
+mod tests {
+    use crate::dbs::document::Document;
+    use crate::parser::parse;
+    use std::fs;
+    use std::str::FromStr;
+    use test_case::test_case;
+
+    #[test_case("src/dbs/test1.txt"; "test1.txt")]
+    #[test_case("src/dbs/test2.txt"; "test2.txt")]
+    fn test_parses_document(file: &str) {
+        let data = fs::read_to_string(file).expect("Unable to read file");
+        let document = Document::from_str(data.as_str());
+        assert!(document.is_ok());
+    }
+
+    #[test_case("src/dbs/test1.txt", 27; "test1.txt")]
+    #[test_case("src/dbs/test2.txt", 18; "test2.txt")]
+    fn test_parses_all_transactions(file: &str, expected: usize) {
+        let data = fs::read_to_string(file).expect("Unable to read file");
+        let document = Document::from_str(data.as_str()).unwrap();
+        let transactions = document.transactions();
+        assert_eq!(transactions.len(), expected);
+    }
+
+    #[test_case("src/dbs/test1.txt"; "test1.txt")]
+    #[test_case("src/dbs/test2.txt"; "test2.txt")]
+    fn test_parses_one_to_json(file: &str) {
+        let data = fs::read_to_string(file).expect("Unable to read file");
+        let json = parse(vec![data]);
+        assert!(!json.is_empty());
+        assert_ne!(json, "[]");
+    }
 }
