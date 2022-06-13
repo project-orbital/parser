@@ -50,5 +50,6 @@ mod tests {
         let json = parse(vec![data]);
         assert!(!json.is_empty());
         assert_ne!(json, "[]");
+        println!("{}", json);
     }
 }

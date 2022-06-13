@@ -1,6 +1,5 @@
 use fancy_regex::Match;
 use std::fmt::{Display, Formatter};
-use std::str::FromStr;
 
 use crate::utils;
 use rust_decimal::Decimal;
@@ -26,8 +25,8 @@ impl Transaction {
         Self {
             date: date.to_string(),
             description: utils::truncate_whitespace(&desc),
-            amount: Decimal::from_str(amt).unwrap(),
-            balance: bal.map(|m| Decimal::from_str(m.as_str()).unwrap()),
+            amount: utils::parse_monetary_value(amt),
+            balance: bal.map(|m| utils::parse_monetary_value(m.as_str())),
         }
     }
 }

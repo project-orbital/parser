@@ -1,5 +1,7 @@
 use fancy_regex::Regex;
 use lazy_static::lazy_static;
+use rust_decimal::Decimal;
+use std::str::FromStr;
 
 #[allow(dead_code)]
 pub fn set_panic_hook() {
@@ -19,6 +21,12 @@ pub fn truncate_whitespace(s: &str) -> String {
         static ref RE: Regex = Regex::new(r"\s+",).unwrap();
     }
     RE.replace_all(s, " ").trim().to_string()
+}
+
+/// Returns a Decimal value for a string with a monetary value which may be formatted with commas.
+pub fn parse_monetary_value(s: &str) -> Decimal {
+    let commas_removed = s.replace(',', "");
+    Decimal::from_str(commas_removed.as_str()).unwrap()
 }
 
 /// Redacts card numbers by replacing any sequence of 13 to 16 digits, delimited or otherwise,

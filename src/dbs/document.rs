@@ -10,7 +10,7 @@ use crate::dbs::transactions::Transaction;
 
 lazy_static! {
     static ref RE: Regex = Regex::new(
-        r"(?s)Balance Brought Forward\s(\d+\.\d{2})(.*?)Balance Carried Forward\s(\d+\.\d{2})",
+        r"(?s)Balance Brought Forward\s(\d{1,3}(?:\,\d{3})*\.\d{2})(.*?)Balance Carried Forward\s(\d{1,3}(?:\,\d{3})*\.\d{2})",
     )
     .unwrap();
 }
