@@ -1,14 +1,10 @@
+use fancy_regex::Match;
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
-use fancy_regex::{Match, Regex};
-use lazy_static::lazy_static;
+use crate::utils;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-
-lazy_static! {
-    static ref RE: Regex = Regex::new(r"\s+",).unwrap();
-}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Transaction {
@@ -29,7 +25,7 @@ impl Transaction {
         let desc = format!("{} {}", desc1, desc2);
         Self {
             date: date.to_string(),
-            description: RE.replace_all(&desc, " ").trim().to_string(),
+            description: utils::truncate_whitespace(&desc),
             amount: Decimal::from_str(amt).unwrap(),
             balance: bal.map(|m| Decimal::from_str(m.as_str()).unwrap()),
         }
