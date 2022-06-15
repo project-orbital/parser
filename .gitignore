@@ -1,6 +1,7 @@
 # Prevent accidental upload of sensitive documents
 *.pdf
 *.txt
+!*-redacted.txt
 
 .idea/
 resources/
