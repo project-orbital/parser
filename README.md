@@ -1,4 +1,6 @@
 # Parser
+![build](https://github.com/github/docs/actions/workflows/rust.yml/badge.svg)
+
 This repository contains the document parser of DollarPlanner. The parser is integrated with the backend as a submodule without a standalone executable.
 
 `master` is the stable branch, and should be able to be integrated with the corresponding `master`
