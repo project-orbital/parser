@@ -43,8 +43,17 @@ pub fn redact_card_numbers(s: &str) -> String {
 }
 
 /// Reads a file at a specified path into a string.
+#[allow(dead_code)]
 pub fn read_to_string(path: &str) -> String {
     std::fs::read_to_string(path).expect(&*format! {"Failed to read {}", path})
+}
+
+/// Reads a file at a specified path into a string if it exists, otherwise reads
+/// from an alternative path.
+pub fn read_to_string_alt(path: &str, alt_path: &str) -> String {
+    std::fs::read_to_string(path)
+        .or_else(|_| std::fs::read_to_string(alt_path))
+        .expect(&*format! {"Failed to read both {} and {}", path, alt_path})
 }
 
 #[cfg(test)]
