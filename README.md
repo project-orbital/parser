@@ -1,5 +1,5 @@
 # Parser
-![build](https://github.com/github/docs/actions/workflows/rust.yml/badge.svg)
+[![CI](https://github.com/project-orbital/parser/actions/workflows/rust.yml/badge.svg)](https://github.com/project-orbital/parser/actions/workflows/rust.yml)
 
 This repository contains the document parser of DollarPlanner. The parser is integrated with the backend as a submodule without a standalone executable.
 
