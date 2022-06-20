@@ -24,7 +24,7 @@ impl Transaction {
         let desc = format!("{} {}", desc1, desc2);
         Self {
             date: date.to_string(),
-            description: utils::truncate_whitespace(&desc),
+            description: utils::redact_card_numbers(utils::truncate_whitespace(&desc).as_str()),
             amount: utils::parse_monetary_value(amt),
             balance: bal.map(|m| utils::parse_monetary_value(m.as_str())),
         }
