@@ -13,6 +13,7 @@ lazy_static! {
         r"(?s)Balance Brought Forward\s(\d{1,3}(?:\,\d{3})*\.\d{2})(.*?)Balance Carried Forward\s(\d{1,3}(?:\,\d{3})*\.\d{2})",
     )
     .unwrap();
+    static ref DATE_REGEX: Regex = Regex::new(r"\d{1,2} ([A-z][a-z]{2}) (\d{4}) to \d{1,2} ([A-z][a-z]{2}) (\d{4})").unwrap();
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -24,13 +25,19 @@ impl FromStr for Document {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self {
-            pages: RE
-                .captures_iter(s)
-                .filter_map(Result::ok)
-                .map(|cap| Page::from_strs(&cap[1], &cap[3], &cap[2]))
-                .collect(),
-        })
+        if let Ok(Some(captures)) = DATE_REGEX.captures(s) {
+            let start = (&captures[1], &captures[2]);
+            let end = (&captures[3], &captures[4]);
+            Ok(Self {
+                pages: RE
+                    .captures_iter(s)
+                    .filter_map(Result::ok)
+                    .map(|cap| Page::from_strs(start, end, &cap[1], &cap[3], &cap[2]))
+                    .collect(),
+            })
+        } else {
+            Err(())
+        }
     }
 }
 
