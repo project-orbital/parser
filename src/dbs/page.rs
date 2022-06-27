@@ -10,7 +10,7 @@ use crate::utils;
 
 lazy_static! {
     static ref RE: Regex =
-        Regex::new(r"(?s)(\d{2} \w{3})(.*?)(\d{1,3}(?:\,\d{3})*\.\d{2})(\d{1,3}(?:\,\d{3})*\.\d{2})?(.*?)(?=$|\d{2} \w{3})")
+        Regex::new(r"(?s)(\d{2}) (\w{3})(.*?)(\d{1,3}(?:\,\d{3})*\.\d{2})(\d{1,3}(?:\,\d{3})*\.\d{2})?(.*?)(?=$|\d{2} \w{3})")
             .unwrap();
 }
 
@@ -22,14 +22,31 @@ pub struct Page {
 }
 
 impl Page {
-    pub(crate) fn from_strs(bbf: &str, bcf: &str, body: &str) -> Self {
+    pub(crate) fn from_strs(
+        start: (&str, &str),
+        end: (&str, &str),
+        bbf: &str,
+        bcf: &str,
+        body: &str,
+    ) -> Self {
         Self {
             balanced_brought_forward: utils::parse_monetary_value(bbf),
             balanced_carried_forward: utils::parse_monetary_value(bcf),
             transactions: RE
                 .captures_iter(body)
                 .filter_map(Result::ok)
-                .map(|cap| Transaction::from_strs(&cap[1], &cap[2], &cap[5], &cap[3], cap.get(4)))
+                .map(|cap| {
+                    Transaction::from_strs(
+                        start,
+                        end,
+                        &cap[1],
+                        &cap[2],
+                        &cap[3],
+                        &cap[6],
+                        &cap[4],
+                        cap.get(5),
+                    )
+                })
                 .collect(),
         }
     }

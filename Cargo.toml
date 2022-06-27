@@ -17,6 +17,7 @@ itertools = "0.10.3"
 fancy-regex = "0.10.0"
 lazy_static = "1.4.0"
 rust_decimal = "1.24.0"
+chrono = "0.4"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
