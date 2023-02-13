@@ -34,7 +34,7 @@ wee_alloc = { version = "0.4.5", optional = true }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
-test-case = "2.1.0"
+test-case = "3.0.0"
 criterion = "0.3"
 
 [[bench]]
